@@ -3,9 +3,12 @@
 #include <limits.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <fstream>
 #include <algorithm>
+#include "xcl2.hpp"
 
+using std::vector;
 using std::cout;
 using std::endl;
 using std::ifstream;
@@ -13,7 +16,9 @@ using std::ios;
 using std::string;
 using std::sort;
 
-void read_train_file(string filename, unsigned long *train_image) {
+void read_train_file(string filename,
+    vector<unsigned long, aligned_allocator<unsigned long>> &train_image,
+    int offset) {
   ifstream f;
   f.open(filename.c_str(), ios::in);
   if (!f.is_open()) {
@@ -27,13 +32,16 @@ void read_train_file(string filename, unsigned long *train_image) {
     f >> str;
     unsigned long val = strtoul(str.substr(0, str.length() - 1).c_str(),
         NULL, 0);
-    train_image[cnt++] = val;
+    train_image[offset + cnt++] = val;
   }
   f.close();
   return ;
 }
 
-void read_test_file(string filename, unsigned long *test_image, int *test_label) {
+void read_test_file(string filename,
+    vector<unsigned long, aligned_allocator<unsigned long>> &test_image,
+    vector<int, aligned_allocator<int>> &test_label) {
+
   ifstream f;
   f.open(filename.c_str(), ios::in);
   if (!f.is_open()) {
@@ -54,11 +62,11 @@ void read_test_file(string filename, unsigned long *test_image, int *test_label)
   return ;
 }
 
-int vote(unsigned char *knn_mat) {
+int vote(vector<unsigned char, aligned_allocator<unsigned char>> &knn_mat) {
   int score[10] = {0};
 
   for (int i = 0; i < 30; i += 3)
-    sort(knn_mat + i, knn_mat + i + 3);
+    sort(knn_mat.begin() + i, knn_mat.begin() + i + 3);
 
   for (int i = 0; i < 3; ++i) {
     int m = INT_MAX;
