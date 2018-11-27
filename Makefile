@@ -5,7 +5,7 @@ VENDOR=XILINX
 DEVICE=xilinx_aws-vu9p-f1_dynamic_5_0
 
 # Host Code Compilation settings
-HOST_SRC_FILES=./src/digitrec_host.cpp ./src/util.cpp
+HOST_SRC_FILES=./minisat/core/* ./minisat/utils/* ./minisat/mtl/*
 
 # Executable names and arguments
 EXE=test
@@ -21,9 +21,9 @@ CXX_FLAGS +=-lstdc++ -L$(XILINX_SDX)/lib/lnx64.o
 endif
 
 # Accelerated Kernel settings
-KERNEL_NAME=digitrec_kernel
-KERNEL_SRC_FILES=./src/digitrec.cpp 
-KERNEL_INC_DIR=$(CXX_INC_DIRS)
+#KERNEL_NAME=digitrec_kernel
+#KERNEL_SRC_FILES=./src/digitrec.cpp 
+#KERNEL_INC_DIR=$(CXX_INC_DIRS)
 
 # MerlinCC Options
 CMP_OPT=
