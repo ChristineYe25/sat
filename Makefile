@@ -1,33 +1,32 @@
-# Copyright (C) 2017 Falcon Computing Solutions, Inc. - All rights reserved.
-#
-# Choose target FPGA platform & vendor
-VENDOR=XILINX
-DEVICE=xilinx_aws-vu9p-f1_dynamic_5_0
+COMMON_REPO := ../../../
 
-# Host Code Compilation settings
-HOST_SRC_FILES=./minisat/core/* ./minisat/utils/* ./minisat/mtl/*
+# wide Memory Access Application
+include $(COMMON_REPO)/utility/boards.mk
+include $(COMMON_REPO)/libs/xcl2/xcl2.mk
+include $(COMMON_REPO)/libs/opencl/opencl.mk
 
-# Executable names and arguments
-EXE=test
-ACC_EXE=test_acc
-# Testing mode
-EXE_ARGS= ./data
+# dot product Host Application
+dot_prod_host_SRCS=./src/dot_prod_host.cpp $(xcl2_SRCS)
+dot_prod_host_HDRS=$(xcl2_HDRS)
+dot_prod_host_CXXFLAGS=-I./src/ $(xcl2_CXXFLAGS) $(opencl_CXXFLAGS)
+dot_prod_host_LDFLAGS=$(opencl_LDFLAGS)
 
-CXX=g++
-CXX_INC_DIRS=-I ./ -I $(MACH_COMMON_DIR)
-CXX_FLAGS+= $(CXX_INC_DIRS) -Wall -O3 -std=c++11
-ifeq ($(VENDOR),XILINX)
-CXX_FLAGS +=-lstdc++ -L$(XILINX_SDX)/lib/lnx64.o
-endif
+# dot product Kernels
+dot_prod_kernel_SRCS=./src/dot_prod_kernel.cpp
+dot_prod_kernel_CLFLAGS=-k dot_prod_kernel
 
-# Accelerated Kernel settings
-#KERNEL_NAME=digitrec_kernel
-#KERNEL_SRC_FILES=./src/digitrec.cpp 
-#KERNEL_INC_DIR=$(CXX_INC_DIRS)
+EXES=dot_prod_host
+XCLBINS=dot_prod_kernel
 
-# MerlinCC Options
-CMP_OPT=
-LNK_OPT=
+XOS=dot_prod_kernel
 
-MCC_COMMON_DIR=${HOME}/Examples/common/
-include $(MCC_COMMON_DIR)/mcc_common.mk
+dot_prod_kernel_XOS=dot_prod_kernel
+
+# check
+check_EXE=dot_prod_host
+check_XCLBINS=dot_prod_kernel
+
+CHECKS=check
+
+include $(COMMON_REPO)/utility/rules.mk
+
