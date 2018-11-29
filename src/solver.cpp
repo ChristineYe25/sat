@@ -11,6 +11,10 @@ void solver_kernel(
         int* c3, 
         int result) {
 
+#pragma ACCEL interface variable=c1 depth=NUM_CLAUSES
+#pragma ACCEL interface variable=c2 depth=NUM_CLAUSES
+#pragma ACCEL interface variable=c3 depth=NUM_CLAUSES 
+  
   result = c1[0] + c2[0] +c3[0]; 
 /*
     unsigned char buf_knn_mat[10][3];
