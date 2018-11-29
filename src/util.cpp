@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <iostream>
-#include <string>
 #include <vector>
 #include <fstream>
 #include <algorithm>
@@ -31,7 +30,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
     string str;
     f >> str; 
     if (str.at(0) != 'p' and str.at(0) != 'c') {
-      substrs = strtok(str, " ");
+      string substrs = strtok(str, ' ');
       if sizeof(substrs) < 2
         continue;
       /*
