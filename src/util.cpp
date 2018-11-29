@@ -29,7 +29,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   while (!f.eof()) {
     string str;
     f >> str; 
-    if str.at(0) != 'p' and str.at(0) != 'c' {
+    if (str.at(0) != 'p' and str.at(0) != 'c') {
       substrs = strtok(str, " ");
       if sizeof(substrs) < 2
         continue;
