@@ -1,46 +1,33 @@
-#==========================================================================
-# Makefile
-#==========================================================================
-# @brief: A makefile the compiles and runs the digitrec program
+# Copyright (C) 2017 Falcon Computing Solutions, Inc. - All rights reserved.
 #
-# @desc: 1. Enter "make" to compile & execute the digitrec program
-#        2. Enter "make clean" to clean up the directory (before submission)
+# Choose target FPGA platform & vendor
+VENDOR=XILINX
+DEVICE=xilinx_aws-vu9p-f1_dynamic_5_0
 
+# Host Code Compilation settings
+HOST_SRC_FILES=./src/sat_host.cpp ./src/util.cpp
 
-# Extract Vivado HLS include path
-VHLS_PATH := $(dir $(shell which vivado_hls))/..
-VHLS_INC ?= ${VHLS_PATH}/include
+# Executable names and arguments
+EXE=test
+ACC_EXE=test_acc
+# Testing mode
+EXE_ARGS= ./data
 
-COMMON_REPO := ../../..
+CXX=g++
+CXX_INC_DIRS=-I ./ -I $(MACH_COMMON_DIR)
+CXX_FLAGS+= $(CXX_INC_DIRS) -Wall -O3 -std=c++11
+ifeq ($(VENDOR),XILINX)
+CXX_FLAGS +=-lstdc++ -L$(XILINX_SDX)/lib/lnx64.o
+endif
 
-# wide Memory Access Application
-include $(COMMON_REPO)/utility/boards.mk
-include $(COMMON_REPO)/libs/xcl2/xcl2.mk
-include $(COMMON_REPO)/libs/opencl/opencl.mk
+# Accelerated Kernel settings
+KERNEL_NAME=solver_kernel
+KERNEL_SRC_FILES=./src/solver.cpp 
+KERNEL_INC_DIR=$(CXX_INC_DIRS)
 
-# dot product Host Application
-digitrec_host_SRCS=./src/digitrec_host.cpp ./src/util.cpp $(xcl2_SRCS)
-digitrec_host_HDRS=$(xcl2_HDRS)
-digitrec_host_CXXFLAGS=-I./ $(xcl2_CXXFLAGS) $(opencl_CXXFLAGS) -I${VHLS_INC} -DK_CONST=3
-digitrec_host_LDFLAGS=$(opencl_LDFLAGS)
+# MerlinCC Options
+CMP_OPT=
+LNK_OPT=
 
-# dot product Kernels
-digitrec_kernel_SRCS=./src/digitrec.cpp
-digitrec_kernel_CLFLAGS=-k digitrec_kernel
-
-
-EXES=digitrec_host
-XCLBINS=digitrec_kernel
-
-XOS=digitrec_kernel
-
-digitrec_kernel_XOS=digitrec_kernel
-
-# check
-check_EXE=digitrec_host ./data
-check_XCLBINS=digitrec_kernel
-
-CHECKS=check
-
-include $(COMMON_REPO)/utility/rules.mk
-
+MCC_COMMON_DIR=${HOME}/Examples/common/
+include $(MCC_COMMON_DIR)/mcc_common.mk
