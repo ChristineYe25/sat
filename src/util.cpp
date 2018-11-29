@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <string.h>
 
 using std::vector;
 using std::cout;
