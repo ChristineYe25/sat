@@ -16,10 +16,7 @@ using std::ios;
 using std::string;
 using std::sort;
 
-void read_clause_file(string filename,
-    vector<int, aligned_allocator<int>> &c1,
-    vector<int, aligned_allocator<int>> &c2,
-    vector<int, aligned_allocator<int>> &c3) { 
+void read_clause_file(string filename, int *c1, int *c2, int *c3){
 
   ifstream f;
   f.open(filename.c_str(), ios::in);

@@ -4,74 +4,48 @@
 
 #define NUM_CLAUSES 1065
 
-extern "C" {
-
 void solver_kernel(
-    int* c1,
-    int* c2,
-    int* c3, 
-    int satisfied) {
-#pragma HLS interface m_axi port=train_images offset=slave bundle=gmem
-#pragma HLS interface m_axi port=knn_mat offset=slave bundle=gmem2
-#pragma HLS interface s_axilite port=test_image bundle=control
-#pragma HLS interface s_axilite port=train_images bundle=control
-#pragma HLS interface s_axilite port=knn_mat bundle=control
-#pragma HLS interface s_axilite port=return bundle=control
+        int* c1,
+        int* c2,
+        int* c3, 
+        int result) {
 
-  for (int x =0; x < NUM_CLAUSES; x++){
-    print("Clauses : "  + c1[x] + " " + c2[x] + " " + c3[x])
-  }
+  result = c1[0] + c2[0] +c3[0]; 
 /*
-  unsigned int a;
+    unsigned char buf_knn_mat[10][3];
 
-  // Initialize the knn set
-init:
-  for (int x = 0; x < 10; ++x) {
-    for (int y = 0; y < 3; ++y) {
-      // Note that the max distance is 49
-      knn_mat[(y + (x * 3))] = (unsigned char)50;
-    }
-  }
-
-  // Compute the difference using XOR
-  unsigned long temp[18000];
-diff:
-  for (int x1 = 0; x1 < 10; ++x1) {
-    for (int y1 = 0; y1 < 1800; ++y1) {
-      temp[(y1 + (x1 * 1800))] = train_images[(y1 + (x1 * 1800))] ^ test_image;
-    }
-  }
-
-  // Compute the distance
-dis:
-  for (int x2 = 0; x2 < 10; ++x2) {
-    for (int y2 = 0; y2 < 1800; ++y2) {
-      unsigned long dis = 0;
-      for (int i = 0; i < 49; ++i) {
-        dis += (temp[(y2 + (x2 * 1800))] & (1L << i)) >> i;
-      }
-      temp[(y2 + (x2 * 1800))] = dis;
-    }
-  }
-
-  // Update knn set
-update:
-  for (int x3 = 0; x3 < 10; ++x3) {
-    for (int y3 = 0; y3 < 1800; ++y3) {
-      unsigned long max_id = 0;
-      for (int i1 = 0; i1 < 3; ++i1) {
-        if (knn_mat[max_id + (x3 * 3)] < knn_mat[(i1 + (x3 * 3))]) {
-          max_id = i1;
+    for (int x = 0; x < 10; ++x) {
+        for (int y = 0; y < 3; ++y) {
+            buf_knn_mat[x][y] = 50;
         }
-      }
-      if (temp[y3 + (x3 * 1800)] < knn_mat[max_id + (x3 * 3)]) {
-        knn_mat[max_id + (x3 * 3)] = temp[y3 + (x3 * 1800)];
-      }
     }
-  }
-  */
 
-  
-} //End of kernel
+    for (int x = 0; x < 10; ++x) {
+        for (int y = 0; y < 1800; ++y) {
+            int temp = train_images[x * 1800 + y] ^ test_image;
+            unsigned char dis = 0;
+            for (int i = 0; i < 49; ++i) {
+                dis += (temp & (1L << i)) >> i;
+            }
 
-} // extern "C"
+            unsigned char max_id = 0;
+            unsigned char max_val = 0;
+            for (int i1 = 0; i1 < 3; ++i1) {
+                if (max_val < buf_knn_mat[x][i1]) {
+                    max_id = i1;
+                    max_val = buf_knn_mat[x][i1];
+                }
+            }
+            if (dis < max_val) {
+                buf_knn_mat[x][max_id] = dis;
+            }
+        }
+    }
+
+    for (int x = 0; x < 10; ++x) {
+        for (int y = 0; y < 3; ++y) {
+            knn_mat[x * 3 + y] = buf_knn_mat[x][y];
+        }
+    }
+    */
+}
