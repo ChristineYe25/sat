@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
   // Prepare data
   for (int i = 0; i < NUM_TEST; ++i)
-    read_clause_file("../data/uf250-01.cnf", c1, c2, c3);
+    read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
 
   // Compute
   int correct = 0;
