@@ -4,6 +4,7 @@
 
 #define NUM_CLAUSES 1065
 
+#pragma ACCEL kernel
 void solver_kernel(
         int* c1,
         int* c2,
