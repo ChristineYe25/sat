@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <sstream>
 
 using std::vector;
 using std::cout;
@@ -33,14 +34,14 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       vector<string> substrs;
       istringstream iss(line);
       for(string s; iss >> s; )
-        result.push_back(s);
+        substrs.push_back(s);
 
       if (substrs.size() < 2)
         continue;
 
-      c1[cnt] = atoi(substrs[0]);
-      c2[cnt] = atoi(substrs[1]);
-      c3[cnt] = atoi(substrs[2]);
+      c1[cnt] = atoi(substrs.at(0));
+      c2[cnt] = atoi(substrs.at(1));
+      c3[cnt] = atoi(substrs.at(2));
       cnt ++; 
     }
   }
