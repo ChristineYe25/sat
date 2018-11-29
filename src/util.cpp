@@ -5,7 +5,6 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
-#include <string.h>
 
 using std::vector;
 using std::cout;
@@ -14,6 +13,7 @@ using std::ifstream;
 using std::ios;
 using std::string;
 using std::sort;
+using std::istringstream;
 
 void read_clause_file(string filename, int *c1, int *c2, int *c3){
 
@@ -27,22 +27,20 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   int cnt = 0;
   cout << "Start to read file"; 
   while (!f.eof()) {
-    string str;
-    f >> str; 
-    if (str.at(0) != 'p' and str.at(0) != 'c') {
-      string substrs = strtok(str, ' ');
-      if sizeof(substrs) < 2
+    string line;
+    f >> line; 
+    if (line.at(0) != 'p' and line.at(0) != 'c') {
+      vector<string> substrs;
+      istringstream iss(line);
+      for(string s; iss >> s; )
+        result.push_back(s);
+
+      if (substrs.size() < 2)
         continue;
-      /*
-      if substrs[0] == ""{
-        c1[cnt] = atoi(substrs[1]);
-        c2[cnt] = atoi(substrs[2]);
-        c3[cnt] = atoi(substrs[3]);
-      }else{
-        c1[cnt] = atoi(substrs[0]);
-        c2[cnt] = atoi(substrs[1]);
-        c3[cnt] = atoi(substrs[2]);
-      }*/
+
+      c1[cnt] = atoi(substrs[0]);
+      c2[cnt] = atoi(substrs[1]);
+      c3[cnt] = atoi(substrs[2]);
       cnt ++; 
     }
   }
