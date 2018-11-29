@@ -30,6 +30,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   while (!f.eof()) {
     string line;
     f >> line; 
+    cout << "Current line " << line; 
     if (line.at(0) != 'p' and line.at(0) != 'c') {
       vector<string> substrs;
       istringstream iss(line);
