@@ -26,12 +26,15 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   }
 
   int cnt = 0;
-  /*
+  cout << "Start to read file"; 
   while (!f.eof()) {
     string str;
-    f >> str;
+    f >> str; 
     if str.at(0) != 'p' and str.at(0) != 'c' {
       substrs = strtok(str, " ");
+      if sizeof(substrs) < 2
+        continue;
+      /*
       if substrs[0] == ""{
         c1[cnt] = atoi(substrs[1]);
         c2[cnt] = atoi(substrs[2]);
@@ -40,11 +43,11 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
         c1[cnt] = atoi(substrs[0]);
         c2[cnt] = atoi(substrs[1]);
         c3[cnt] = atoi(substrs[2]);
-      }
+      }*/
       cnt ++; 
     }
-  }*/
-    
+  }
+  cout << "Final cnt is " << cnt;
 
   f.close();
   return ;

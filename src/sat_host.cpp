@@ -15,9 +15,9 @@ using std::to_string;
 void digitrec_kernel(int* c1, int* c2, int* c3, int result);
 #endif
 
-
 // Util functions for host
-void read_clause_file(string filename, int *c1, int *c2, int *c3){
+void read_clause_file(string filename, int *c1, int *c2, int *c3); 
+
 
 int main(int argc, char **argv) {
 
