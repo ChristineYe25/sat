@@ -26,6 +26,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   }
 
   int cnt = 0;
+  /*
   while (!f.eof()) {
     string str;
     f >> str;
@@ -42,7 +43,8 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       }
       cnt ++; 
     }
-  }
+  }*/
+    
 
   f.close();
   return ;

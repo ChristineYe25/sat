@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   __merlin_init(argv[argc-1]);
 #endif
 
-  string path(argv[1]);
+  //string path(argv[1]);
 
   // Prepare data
   for (int i = 0; i < NUM_TEST; ++i)
