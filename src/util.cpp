@@ -6,7 +6,6 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
-#include "xcl2.hpp"
 
 using std::vector;
 using std::cout;
