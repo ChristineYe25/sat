@@ -2,6 +2,10 @@
 #include <math.h>
 #include <assert.h>
 
+
+using std::cout;
+using std::endl;
+
 #define NUM_CLAUSES 1065
 
 #pragma ACCEL kernel
@@ -14,7 +18,8 @@ void solver_kernel(
 #pragma ACCEL interface variable=c1 depth=1065
 #pragma ACCEL interface variable=c2 depth=1065
 #pragma ACCEL interface variable=c3 depth=1065 
-  
+
+  cout << "Kernel :"<< c1[0] << " " << c2[0]<< " " <<c3[0] << endl; 
   result = c1[0] + c2[0] +c3[0]; 
 /*
     unsigned char buf_knn_mat[10][3];
