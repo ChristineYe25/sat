@@ -31,7 +31,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines)
   while (std::getline(f, line)) {
     cout << line << endl; 
     cout << "Current line " << line; 
-    if (line == NULL or line == "")
+    if (line == "")
       continue;
     
     if (line.at(0) != 'p' and line.at(0) != 'c') {
