@@ -26,7 +26,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   }
 
   int cnt = 0;
-  cout << "Start to read file"; 
+  cout << "Start to read file" <<endl; 
   string line;
   while (std::getline(f, line)) {
     if (line == "")
