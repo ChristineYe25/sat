@@ -33,7 +33,7 @@ void solver_kernel(
     tmp[x] = c1_local[x] + c2_local[x] +c3_local[x];
   }
 
-  result =tmp[0]; 
+  *result =tmp[0]; 
 
 /*
   while (){
