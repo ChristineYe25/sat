@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
   int *c1 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c2 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c3 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
-  int *result;  
+  int result = 0;
 
   if (argc < 2) {
     cout << "Usage: ./a.out <data path>" << endl;

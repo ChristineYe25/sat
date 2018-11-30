@@ -9,14 +9,30 @@ void solver_kernel(
         int* c1,
         int* c2,
         int* c3, 
-        int* result) {
+        int result) {
 
 #pragma ACCEL interface variable=c1 depth=1065
 #pragma ACCEL interface variable=c2 depth=1065
 #pragma ACCEL interface variable=c3 depth=1065 
-#pragma ACCEL interface variable=result depth = 1
-  //result = c1[0] + c2[0] +c3[0]; 
-  *result = 2; 
+#pragma ACCEL interface variable=result
+  
+  int c1_local[NUM_CLAUSES];
+  int c2_local[NUM_CLAUSES];
+  int c3_local[NUM_CLAUSES];
+  int tmp[NUM_CLAUSES];
+
+  #pragma ACCEL pipeline flatten
+  for (int x = 0; x < 10; ++x) {
+    c1_local[x] = c1[x]; 
+    c2_local[x] = c2[x]; 
+    c3_local[x] = c3[x]; 
+  }
+
+  #pragma ACCEL parallel
+  for (int x = 0; x < NUM_CLAUSES; ++x) {
+    tmp[x] = c1_local[x] + c2_local[x] +c3_local[x];
+  }
+  result =tmp[0]; 
 
 /*
     unsigned char buf_knn_mat[10][3];
