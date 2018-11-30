@@ -20,6 +20,7 @@ void solver_kernel(
   int c2_local[NUM_CLAUSES];
   int c3_local[NUM_CLAUSES];
   int tmp[NUM_CLAUSES];
+  int result_buf; 
 
   #pragma ACCEL pipeline flatten
   for (int x = 0; x < 10; ++x) {
@@ -33,10 +34,11 @@ void solver_kernel(
     tmp[x] = c1_local[x] + c2_local[x] +c3_local[x];
   }
 
-  result =tmp[0]; 
+  result_buf = tmp[0]; 
+  result =result_buf; 
 
   while (){
-    
+
   }
 
 
