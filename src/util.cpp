@@ -28,13 +28,13 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines)
   int cnt = 0;
   cout << "Start to read file"; 
   string line;
-  while (std::getline(f, line) && cnt <= num_lines) {
+  while (std::getline(f, line) && cnt < num_lines) {
     cout << line << endl; 
     cout << "Current line " << line; 
     if (line.at(0) != 'p' and line.at(0) != 'c') {
       vector<string> substrs;
       istringstream iss(line);
-      for(string s; iss >> s; )
+      for(string s; iss >> s;)
         substrs.push_back(s);
 
       if (substrs.size() < 2)
