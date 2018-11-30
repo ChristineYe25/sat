@@ -45,12 +45,12 @@ int main(int argc, char **argv) {
   // Compute
   for (int i = 0; i < NUM_TEST; ++i) {
 #ifdef MCC_ACC
-    __merlin_solver_kernel(&c1, &c2, &c3, result); 
+    __merlin_solver_kernel(c1, c2, c3, result); 
 #else
-    solver_kernel(&c1, &c2, &c3, result);
+    solver_kernel(c1, c2, c3, result);
 #endif
-    cout << "Result : " << result; 
 
+    cout << "Result : " << result; 
   }
 
 #ifdef MCC_ACC
