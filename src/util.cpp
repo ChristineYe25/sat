@@ -29,8 +29,6 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
   cout << "Start to read file"; 
   string line;
   while (std::getline(f, line)) {
-    cout << line << endl; 
-    //cout << "Current line " << line; 
     if (line == "")
       continue;
     
@@ -50,7 +48,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       cnt ++; 
     }
   }
-  cout << "Final cnt is " << cnt << "\n";
+  cout << "Number of clauses : " << cnt << endl << "Finish reading file" << endl;
 
   f.close();
   return ;

@@ -15,7 +15,8 @@ void solver_kernel(
 #pragma ACCEL interface variable=c2 depth=1065
 #pragma ACCEL interface variable=c3 depth=1065 
 #pragma ACCEL interface variable=result 
-  result = c1[0] + c2[0] +c3[0]; 
+  //result = c1[0] + c2[0] +c3[0]; 
+  result = 2; 
 
 /*
     unsigned char buf_knn_mat[10][3];
