@@ -1,7 +1,6 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <iostream>
 
 #define NUM_CLAUSES 1065
 
