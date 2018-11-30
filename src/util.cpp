@@ -46,7 +46,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       c1[cnt] = stoi(substrs.at(0));
       c2[cnt] = stoi(substrs.at(1));
       c3[cnt] = stoi(substrs.at(2));
-      cout << "Clause :"<< c1[cnt] << " " << c2[cnt]<< " " <<c3[cnt] << "\n"; 
+      //cout << "Clause :"<< c1[cnt] << " " << c2[cnt]<< " " <<c3[cnt] << "\n"; 
       cnt ++; 
     }
   }
