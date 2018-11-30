@@ -27,9 +27,9 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
 
   int cnt = 0;
   cout << "Start to read file"; 
-  while (!f.eof()) {
-    string line;
-    f >> line; 
+  string line;
+  while (std::getline(f, line)) {
+    cout << line << endl; 
     cout << "Current line " << line; 
     if (line.at(0) != 'p' and line.at(0) != 'c') {
       vector<string> substrs;
