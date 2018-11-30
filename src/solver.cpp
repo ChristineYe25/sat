@@ -32,8 +32,13 @@ void solver_kernel(
   for (int x = 0; x < NUM_CLAUSES; ++x) {
     tmp[x] = c1_local[x] + c2_local[x] +c3_local[x];
   }
-  
+
   result =tmp[0]; 
+
+  while (){
+    
+  }
+
 
 /*
     unsigned char buf_knn_mat[10][3];
