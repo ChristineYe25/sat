@@ -37,10 +37,11 @@ void solver_kernel(
   result_buf = tmp[0]; 
   result =result_buf; 
 
+/*
   while (){
 
   }
-
+*/
 
 /*
     unsigned char buf_knn_mat[10][3];
