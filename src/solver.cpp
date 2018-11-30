@@ -11,9 +11,9 @@ void solver_kernel(
         int* c3, 
         int result) {
 
-#pragma ACCEL interface variable=c1 bus_bitwidth=512
-#pragma ACCEL interface variable=c2 bus_bitwidth=512
-#pragma ACCEL interface variable=c3 bus_bitwidth=512 
+#pragma ACCEL interface variable=c1 bus_bitwidth=512 depth = 1065
+#pragma ACCEL interface variable=c2 bus_bitwidth=512 depth = 1065
+#pragma ACCEL interface variable=c3 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=result
   
   int c1_local[NUM_CLAUSES];
