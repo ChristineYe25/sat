@@ -11,19 +11,18 @@ void solver_kernel(
         int* c3, 
         int result) {
 
-#pragma ACCEL interface variable=c1 depth=1065
-#pragma ACCEL interface variable=c2 depth=1065
-#pragma ACCEL interface variable=c3 depth=1065 
+#pragma ACCEL interface variable=c1 bus_bitwidth=512
+#pragma ACCEL interface variable=c2 bus_bitwidth=512
+#pragma ACCEL interface variable=c3 bus_bitwidth=512 
 #pragma ACCEL interface variable=result
   
   int c1_local[NUM_CLAUSES];
   int c2_local[NUM_CLAUSES];
   int c3_local[NUM_CLAUSES];
   int tmp[NUM_CLAUSES];
-  int result_buf; 
 
   #pragma ACCEL pipeline flatten
-  for (int x = 0; x < 10; ++x) {
+  for (int x = 0; x < NUM_CLAUSES; ++x) {
     c1_local[x] = c1[x]; 
     c2_local[x] = c2[x]; 
     c3_local[x] = c3[x]; 
@@ -34,8 +33,7 @@ void solver_kernel(
     tmp[x] = c1_local[x] + c2_local[x] +c3_local[x];
   }
 
-  result_buf = tmp[0]; 
-  result =result_buf; 
+  result =tmp[0]; 
 
 /*
   while (){
