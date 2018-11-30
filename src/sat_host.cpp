@@ -16,7 +16,7 @@ void digitrec_kernel(int* c1, int* c2, int* c3, int result);
 #endif
 
 // Util functions for host
-void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines); 
+void read_clause_file(string filename, int *c1, int *c2, int *c3); 
 
 
 int main(int argc, char **argv) {
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
   // Prepare data
   for (int i = 0; i < NUM_TEST; ++i)
-    read_clause_file("./data/uf250-01.cnf", c1, c2, c3, 1073);
+    read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
 
   // Compute
   int correct = 0;

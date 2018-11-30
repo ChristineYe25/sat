@@ -16,7 +16,7 @@ using std::string;
 using std::sort;
 using std::istringstream;
 
-void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines){
+void read_clause_file(string filename, int *c1, int *c2, int *c3){
 
   ifstream f;
   f.open(filename.c_str(), ios::in);
@@ -30,7 +30,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines)
   string line;
   while (std::getline(f, line)) {
     cout << line << endl; 
-    cout << "Current line " << line; 
+    //cout << "Current line " << line; 
     if (line == "")
       continue;
     
@@ -42,7 +42,7 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3, int num_lines)
 
       if (substrs.size() < 2)
         continue;
-      cout << "Clause :"<< substrs.at(0) << " " << substrs.at(1)
+      //cout << "Clause :"<< substrs.at(0) << " " << substrs.at(1)
           << " " <<substrs.at(1) << "\n"; 
       c1[cnt] = stoi(substrs.at(0));
       c2[cnt] = stoi(substrs.at(1));
