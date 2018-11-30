@@ -9,14 +9,14 @@ void solver_kernel(
         int* c1,
         int* c2,
         int* c3, 
-        int result) {
+        int* result) {
 
 #pragma ACCEL interface variable=c1 depth=1065
 #pragma ACCEL interface variable=c2 depth=1065
 #pragma ACCEL interface variable=c3 depth=1065 
-#pragma ACCEL interface variable=result 
+#pragma ACCEL interface variable=result depth = 1
   //result = c1[0] + c2[0] +c3[0]; 
-  result = 2; 
+  *result = 2; 
 
 /*
     unsigned char buf_knn_mat[10][3];
