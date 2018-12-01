@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
   int *c1 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c2 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c3 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
-  int result;
+  int *result = (int *)malloc(sizeof(int));
 
   if (argc < 2) {
     cout << "Usage: ./a.out <data path>" << endl;
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     solver_kernel(c1, c2, c3, result);
 #endif
 
-    cout << "Result : " << result << endl; 
+    cout << "Result : " << result[0] << endl; 
   }
 
 #ifdef MCC_ACC
