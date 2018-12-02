@@ -2,7 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <ostream.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
