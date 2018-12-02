@@ -2,6 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string> 
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
@@ -172,7 +173,7 @@ void solver_kernel(
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
 
         state = PROP;
-        printf("Decide var : v" + new_var_idx.str() +"\n");
+        printf("Decide var : v" + std::to_string(new_var_idx) +"\n");
 
       case PROP:
         bool conflict[BUF_SIZE];
