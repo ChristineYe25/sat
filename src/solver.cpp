@@ -1,6 +1,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
