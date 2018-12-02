@@ -19,35 +19,23 @@
 #define FAILED 5
 
 //using std::vector;
-void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
-  const int var, const int x){
-   if (var> 0){
-      assert(pos_cls[var][4]>0);
-      if (pos_cls[var][0] == 0){
-        pos_cls[var][0] = x; 
-      }else if (pos_cls[var][1] == 0){
-        pos_cls[var][1] = x; 
-      }else if (pos_cls[var][2] == 0){
-        pos_cls[var][2] = x; 
-      }else if (pos_cls[var][3] == 0){
-        pos_cls[var][3] = x; 
-      }else {
-        pos_cls[var][4] = x; 
+void collect_buffer(int** pos_cls, int** neg_cls, const int lit, const int x){
+  if (lit> 0){
+    for (int i = 0; i < 10; i++){
+      if (pos_cls[lit][i] == 0){
+        pos_cls[lit][i] = x; 
+        break; 
       }
-    }else{
-      assert(neg_cls[var][4]>0);
-      if (neg_cls[-var][0] == 0){
-        neg_cls[-var][0] = x; 
-      }else if (neg_cls[-var][1] == 0){
-        neg_cls[-var][1] = x; 
-      }else if (neg_cls[-var][2] == 0){
-        neg_cls[-var][2] = x; 
-      }else if (neg_cls[-var][3] == 0){
-        neg_cls[-var][3] = x; 
-      }else { 
-        neg_cls[-var][4] = x; 
+    } 
+  }else{
+    for (int i = 0; i < 10; i++){
+      if (neg_cls[-lit][i] == 0){
+        neg_cls[lit][i] = x; 
+        break; 
       }
-    }
+    } 
+  }
+    
 }
 
 
@@ -104,13 +92,16 @@ void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
 
 #pragma ACCEL kernel
 void solver_kernel(
-        int* c1, int* c2, int* c3, 
+        int* c1, int* c2, int* c3, int* num_pos_cls, int* num_neg_cls, 
         int* result){
    //     int* pos_cls, int* neg_cls, int* pos_cls_idx, int* neg_cls_idx) {
 
 #pragma ACCEL interface variable=c1 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=c2 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=c3 bus_bitwidth=512 depth = 1065
+#pragma ACCEL interface variable=num_pos_cls bus_bitwidth=512 depth = 1065
+#pragma ACCEL interface variable=num_neg_cls bus_bitwidth=512 depth = 1065  
+
   /*
 #pragma ACCEL interface variable=pos_cls bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=neg_cls bus_bitwidth=512 depth = 1065
@@ -121,10 +112,11 @@ void solver_kernel(
  
   int satisfiable; 
   int local_clauses[NUM_CLAUSES][3];
-  int pos_cls[NUM_VARS][BUF_SIZE];
-  int neg_cls[NUM_VARS][BUF_SIZE];
-  
- // vector<int> local_pos_lit_cls[NUM_VAR];
+  //int pos_cls[NUM_VARS][BUF_SIZE];
+  //int neg_cls[NUM_VARS][BUF_SIZE];
+  int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
+  int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
+
   int state = 0; 
  
   int assigned_vars_stack[NUM_VARS]; // assigend value stack
@@ -132,14 +124,22 @@ void solver_kernel(
   int stack_end_ptr = -1; 
   int var_truth_table[NUM_VARS];
 
+  for (i=0; i<NUM_VARS; i++){
+    pos_cls[i] = (int *)malloc(num_pos_cls[i] * sizeof(int));
+    neg_cls[i] = (int *)malloc(num_neg_cls[i] * sizeof(int));
+  }
+
   //#pragma ACCEL pipeline 
   for (int x = 0; x < NUM_CLAUSES; ++x) {
     local_clauses[x][0] = c1[x];
     local_clauses[x][1] = c2[x];
     local_clauses[x][2] = c3[x];
+    
     collect_buffer(pos_cls, neg_cls, c1[x], x);
     collect_buffer(pos_cls, neg_cls, c2[x], x);
     collect_buffer(pos_cls, neg_cls, c3[x], x);
+    
+
   }
 
   int new_var_idx = 0; 
