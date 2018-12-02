@@ -10,8 +10,8 @@ using std::vector;
 void solver_kernel(
         int* c1, int* c2, int* c3, 
         int* pos_lit, int* neg_lit, 
-        int* result, 
-        int* pos_cls, int* neg_cls, int* pos_cls_idx, int* neg_cls_idx) {
+        int* result){
+   //     int* pos_cls, int* neg_cls, int* pos_cls_idx, int* neg_cls_idx) {
 
 #pragma ACCEL interface variable=c1 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=c2 bus_bitwidth=512 depth = 1065
