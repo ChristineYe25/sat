@@ -16,9 +16,16 @@ using std::string;
 using std::sort;
 using std::istringstream;
 
-void read_clause_file(string filename, int *c1, int *c2, int *c3){
+#define NUM_CLAUSES 1065
+#define NUM_VAR 250
+void read_clause_file(string filename, int *c1, int *c2, int *c3, 
+    int *pos_lit, int *neg_lit){
 
   ifstream f;
+  int l1, l2, l3; 
+  //vector<int> local_pos_lit_cls[NUM_VAR];
+  //vector<int> local_neg_lit_cls[NUM_VAR];
+
   f.open(filename.c_str(), ios::in);
   if (!f.is_open()) {
     cout << "Open " << filename << " failed" << endl;
@@ -41,14 +48,45 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       if (substrs.size() < 2)
         continue;
 
-      c1[cnt] = stoi(substrs.at(0));
-      c2[cnt] = stoi(substrs.at(1));
-      c3[cnt] = stoi(substrs.at(2));
+      l1 = stoi(substrs.at(0));
+      l2 = stoi(substrs.at(1));
+      l3 = stoi(substrs.at(2));
+      c1[cnt] = l1;
+      c2[cnt] = l2;
+      c3[cnt] = l3;
+      
+      if (l1 > 0){
+        pos_lit[l1] ++ ;
+        //local_pos_lit_cls[l1].push(cnt);
+      }else{
+        neg_lit[l1] ++;
+        //local_neg_lit_cls[l1].push(cnt);
+      }
+      if (l2 > 0){
+        pos_lit[l2] ++ ;
+        //local_pos_lit_cls[l2].push(cnt);
+      }else{
+        neg_lit[l1] ++;
+        //local_neg_lit_cls[l2].push(cnt);
+      }
+      if (l3 > 0){
+        pos_lit[l1] ++ ;
+        //local_pos_lit_cls[l3].push(cnt);
+      }else{
+        neg_lit[l1] ++;
+        //local_neg_lit_cls[l3].push(cnt);
+      }
+
       //cout << "Clause :"<< c1[cnt] << " " << c2[cnt]<< " " <<c3[cnt] << "\n"; 
       cnt ++; 
     }
   }
   cout << "Number of clauses : " << cnt << endl << "Finish reading file" << endl;
+  for (int i =0; i<NUM_VAR ; i++){
+    for (int j = 0; j <pos_lit_cls.size(); j++){
+
+    }
+  }
 
   f.close();
   return ;

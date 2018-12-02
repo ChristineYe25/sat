@@ -3,6 +3,7 @@
 
 #define NUM_TEST 1
 #define NUM_CLAUSES 1065
+#define NUM_VAR 250 
 
 using std::cout;
 using std::endl;
@@ -16,7 +17,7 @@ void digitrec_kernel(int* c1, int* c2, int* c3, int* result);
 #endif
 
 // Util functions for host
-void read_clause_file(string filename, int *c1, int *c2, int *c3); 
+void read_clause_file(string filename, int *c1, int *c2, int *c3, int *pos_lit, int *neg_lit); 
 
 
 int main(int argc, char **argv) {
@@ -24,6 +25,9 @@ int main(int argc, char **argv) {
   int *c1 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c2 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *c3 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
+  int pos_lit[NUM_VAR] = {0}; 
+  int neg_lit[NUM_VAR] = {0};
+ 
   int *result = (int *)malloc(sizeof(int));
 
   if (argc < 2) {
@@ -38,12 +42,13 @@ int main(int argc, char **argv) {
   //string path(argv[1]);
 
   // Prepare data
-  for (int i = 0; i < NUM_TEST; ++i)
-    read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
+  //for (int i = 0; i < NUM_TEST; ++i)
+  //  read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
 
   cout << "Clause :"<< c1[0] << " " << c2[0]<< " " <<c3[0] << endl; 
   // Compute
   for (int i = 0; i < NUM_TEST; ++i) {
+    read_clause_file("./data/uf250-01.cnf", c1, c2, c3, pos_lit, neg_lit);
 #ifdef MCC_ACC
     __merlin_solver_kernel(c1, c2, c3, result); 
 #else
