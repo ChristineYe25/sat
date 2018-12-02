@@ -46,8 +46,8 @@ int main(int argc, char **argv) {
   //string path(argv[1]);
 
   // Prepare data
-  //for (int i = 0; i < NUM_TEST; ++i)
-  //  read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
+  for (int i = 0; i < NUM_TEST; ++i)
+    read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
 
   cout << "Clause :"<< c1[0] << " " << c2[0]<< " " <<c3[0] << endl; 
   // Compute
