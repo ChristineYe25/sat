@@ -1,16 +1,18 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <cmath> 
-
-#include <stdio.h>
-#include <stdlib.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
 #define BUF_SIZE 5
+
+#define F 2
+#define T 1
+#define Undef 0
+
 //using std::vector;
-void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], int var, int x){
+void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
+  const int var, const int x){
    if (var> 0){
       if (pos_cls[var][0] == 0){
         pos_cls[var][0] = x; 
@@ -38,20 +40,56 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
     }
 }
 
-/*
-void deduction(){
 
+void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
+  conflict = 0; 
   if (l1>0 && l2>0){
-    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
+    // F & F or F -> T or T <- F
+    if (var_truth_table[l1] == F){
+      if (var_truth_table[l2] == F){
+        conflict = 1;
+      }else {
+        l_ded[1] = T;
+      }
+    }else if (var_truth_table[l1] == Undef && var_truth_table[l2] == F ){
+      l_ded[0] = T;
+    }
   }else if (l1>0 && l2<0){
-    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
+    // F & F or F -> ~F or T <- ~T
+    if (var_truth_table[l1] == F){
+      if (var_truth_table[-l2] == T){
+        conflict = 1;
+      }else {
+        l_ded[1] = F;
+      }
+    }else if (var_truth_table[l1] == Undef && var_truth_table[l2] == T){
+      l_ded[0] = T;
+    }
   }else if (l1<0 && l2>0){
-    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
+    // ~T & F or ~F -> T or ~T <- F
+    if (var_truth_table[-l1] == T){
+      if (var_truth_table[l2] == F){
+        conflict = 1;
+      }else {
+        l_ded[1] = T;
+      }
+    }else if (var_truth_table[l1] == Undef && var_truth_table[l2] == F){
+      l_ded[0] = T;
+    }
   }else{
-    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
+    // ~T & ~T or ~T -> ~F or ~F <- ~T
+    if (var_truth_table[-l1] == T){
+      if (var_truth_table[-l2] == T){
+        conflict = 1;
+      }else {
+        l_ded[1] = F;
+      }
+    }else if (var_truth_table[l1] == Undef && var_truth_table[l2] == F){
+      l_ded[0] = F;
+    }
   }
 
-}*/
+}
 
 
 #pragma ACCEL kernel
@@ -75,14 +113,16 @@ void solver_kernel(
   int local_clauses[NUM_CLAUSES][3];
   int pos_cls[NUM_VARS][BUF_SIZE];
   int neg_cls[NUM_VARS][BUF_SIZE];
+
+  int *test = (int *)malloc(sizeof(int) * 10);
   
  // vector<int> local_pos_lit_cls[NUM_VAR];
 
 
   //int cl_truth_table[NUM_CLAUSES][3];
   int num_T_cls = 0;  
-  int assigned_var_buf[NUM_VARS][2]; // idx, assigned value 
-  int var_truth_table[NUM_VARS]; 
+  //int assigned_var_buf[NUM_VARS][2]; // idx, assigned value 
+  int var_truth_table[NUM_VARS];
 
   //#pragma ACCEL pipeline 
   for (int x = 0; x < NUM_CLAUSES; ++x) {
@@ -106,6 +146,7 @@ void solver_kernel(
 
     //propogate
     bool conflict[BUF_SIZE];
+    int ded_num[BUF_SIZE][2]; // idx and its value
 
     #pragma ACCEL parallel 
     for (int x = 0; x < BUF_SIZE; x++){
@@ -123,19 +164,19 @@ void solver_kernel(
           l1 = local_clauses[neg_cls[new_var_idx][x]][0];
           l2 = local_clauses[neg_cls[new_var_idx][x]][1];
         }
-
-        if (l1>0 && l2>0){
-    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
-  }else if (l1>0 && l2<0){
-    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
-  }else if (l1<0 && l2>0){
-    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
-  }else{
-    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
-  }
-  
+        int l_ded[2]; 
+        deduction(l1, l2, var_truth_table, conflict, l_ded);
+        if (l_ded[0]!= Undef){
+          ded_num[x]=l1;
+          ded_num[x]=l_ded[0]; 
+        }else if (l_ded[1] != Undef){
+          ded_num[x]=l2;
+          ded_num[x]=l_ded[1];
+        }
       }
+
     }
+
 
 
     if (conflict[0] | conflict[1] | conflict[2] | conflict[3] | conflict[4]){
