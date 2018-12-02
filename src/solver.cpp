@@ -117,7 +117,7 @@ void solver_kernel(
 */
 #pragma ACCEL interface variable=result depth=1 
  
- 
+  int satisfiable ; 
   int local_clauses[NUM_CLAUSES][3];
   int pos_cls[NUM_VARS][BUF_SIZE];
   int neg_cls[NUM_VARS][BUF_SIZE];
@@ -141,7 +141,6 @@ void solver_kernel(
   }
 
   int new_var_idx = 0; 
-  int passed = 0; 
   while (~(state == SOLVED | state == FAILED)){
 
     switch(state){
@@ -207,14 +206,14 @@ void solver_kernel(
         state = PROP; 
 
       case SOLVED:
-
+        satisfiable = 1; 
       case FAILED: 
-        result = 0; 
+        satisfiable = 0; 
     }  
 
     //propogate
   }
 
-  result[0] = new_var_idx; 
+  result[0] = satisfiable; 
 
 }
