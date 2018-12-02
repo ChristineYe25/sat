@@ -2,7 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <iostream>
+#include <iostream.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
@@ -19,7 +19,7 @@
 #define BACKTRACK 4 
 #define FAILED 5
 
-using std::cout;
+//using std::cout;
 
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
   const int var, const int x){
