@@ -18,13 +18,14 @@ using std::istringstream;
 
 #define NUM_CLAUSES 1065
 #define NUM_VAR 250
-void read_clause_file(string filename, int *c1, int *c2, int *c3, 
-    int *pos_lit, int *neg_lit){
+void read_clause_file(string filename, int *c1, int *c2, int *c3){ 
+  //  int *pos_cls, int *neg_cls, 
+  //  int *pos_cls_idx, int *neg_cls_idx){
 
   ifstream f;
   int l1, l2, l3; 
-  //vector<int> local_pos_lit_cls[NUM_VAR];
-  //vector<int> local_neg_lit_cls[NUM_VAR];
+  vector<int> local_pos_lit_cls[NUM_VAR];
+  vector<int> local_neg_lit_cls[NUM_VAR];
 
   f.open(filename.c_str(), ios::in);
   if (!f.is_open()) {
@@ -54,39 +55,36 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3,
       c1[cnt] = l1;
       c2[cnt] = l2;
       c3[cnt] = l3;
-      
+      /*
       if (l1 > 0){
-        pos_lit[l1] ++ ;
-        //local_pos_lit_cls[l1].push(cnt);
+        local_pos_lit_cls[l1].push(cnt);
       }else{
-        neg_lit[l1] ++;
-        //local_neg_lit_cls[l1].push(cnt);
+        local_neg_lit_cls[-l1].push(cnt);
       }
       if (l2 > 0){
-        pos_lit[l2] ++ ;
-        //local_pos_lit_cls[l2].push(cnt);
+        local_pos_lit_cls[l2].push(cnt);
       }else{
-        neg_lit[l1] ++;
-        //local_neg_lit_cls[l2].push(cnt);
+        local_neg_lit_cls[-l2].push(cnt);
       }
       if (l3 > 0){
-        pos_lit[l1] ++ ;
-        //local_pos_lit_cls[l3].push(cnt);
+        local_pos_lit_cls[l3].push(cnt);
       }else{
-        neg_lit[l1] ++;
-        //local_neg_lit_cls[l3].push(cnt);
-      }
-
+        local_neg_lit_cls[-l3].push(cnt);
+      }*/
       //cout << "Clause :"<< c1[cnt] << " " << c2[cnt]<< " " <<c3[cnt] << "\n"; 
       cnt ++; 
     }
   }
   cout << "Number of clauses : " << cnt << endl << "Finish reading file" << endl;
+  /*
+  int x = 0; 
   for (int i =0; i<NUM_VAR ; i++){
-    for (int j = 0; j <pos_lit_cls.size(); j++){
-
+    pos_cls_idx[i] = x; 
+    for (int j = 0; j < local_pos_lit_cls[i].size(); j++){
+      pos_cls[x] = local_pos_lit_cls[j];
+      x++; 
     }
-  }
+  }*/
 
   f.close();
   return ;
