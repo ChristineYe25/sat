@@ -2,6 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <iostream>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
@@ -17,6 +18,8 @@
 #define ANAYLSIS 3
 #define BACKTRACK 4 
 #define FAILED 5
+
+using std::cout;
 
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
   const int var, const int x){
@@ -136,10 +139,12 @@ void solver_kernel(
   int stack_end_ptr = -1; 
   int var_truth_table[NUM_VARS];
 
+/*
   for (int i=0; i<NUM_VARS; i++){
     pos_cls[i] = (int *)malloc(num_pos_cls[i] * sizeof(int));
     neg_cls[i] = (int *)malloc(num_neg_cls[i] * sizeof(int));
   }
+*/
 
   //#pragma ACCEL pipeline 
   for (int x = 0; x < NUM_CLAUSES; ++x) {
@@ -162,17 +167,17 @@ void solver_kernel(
         if (new_var_idx == NUM_VARS)
           state = SOLVED;
 
-        while (var_truth_table[new_var_idx] != 0){
+        while (var_truth_table[new_var_idx] != Undef){
           new_var_idx ++; 
         }
         
-        if (pos_cls[new_var_idx][3] == Undef){
-          var_truth_table[new_var_idx] = T; //assigned to True
-        }
+        
+        var_truth_table[new_var_idx] = T; //always assigned to True
         stack_end_ptr ++; 
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
 
         state = PROP;
+        //result[0] = new_var_idx;
 
       case PROP:
         bool conflict[BUF_SIZE];
@@ -182,21 +187,40 @@ void solver_kernel(
         #pragma ACCEL parallel 
         for (int x = 0; x < BUF_SIZE; x++){
           int l1, l2;
-          if (neg_cls[new_var_idx][x] == 0){
-            conflict[x] = 0; 
-          }else{
-            if (local_clauses[neg_cls[new_var_idx][x]][0] == new_var_idx){
-              l1 = local_clauses[neg_cls[new_var_idx][x]][1];
-              l2 = local_clauses[neg_cls[new_var_idx][x]][2];
-            }else if (local_clauses[neg_cls[new_var_idx][x]][1] == new_var_idx){
-              l1 = local_clauses[neg_cls[new_var_idx][x]][0];
-              l2 = local_clauses[neg_cls[new_var_idx][x]][2];
+          if(var_truth_table[new_var_idx] == T){
+            if (neg_cls[new_var_idx][x] == 0){
+              conflict[x] = 0; 
             }else{
-              l1 = local_clauses[neg_cls[new_var_idx][x]][0];
-              l2 = local_clauses[neg_cls[new_var_idx][x]][1];
+              if (local_clauses[neg_cls[new_var_idx][x]][0] == new_var_idx){
+                l1 = local_clauses[neg_cls[new_var_idx][x]][1];
+                l2 = local_clauses[neg_cls[new_var_idx][x]][2];
+              }else if (local_clauses[neg_cls[new_var_idx][x]][1] == new_var_idx){
+                l1 = local_clauses[neg_cls[new_var_idx][x]][0];
+                l2 = local_clauses[neg_cls[new_var_idx][x]][2];
+              }else{
+                l1 = local_clauses[neg_cls[new_var_idx][x]][0];
+                l2 = local_clauses[neg_cls[new_var_idx][x]][1];
+              }
+              int l_ded[2]; 
+              deduction(l1, l2, var_truth_table, conflict[x], l_ded);
             }
-            int l_ded[2]; 
-            deduction(l1, l2, var_truth_table, conflict[x], l_ded);
+          }else{
+            if (pos_cls[new_var_idx][x] == 0){
+              conflict[x] = 0; 
+            }else{
+              if (local_clauses[pos_cls[new_var_idx][x]][0] == new_var_idx){
+                l1 = local_clauses[pos_cls[new_var_idx][x]][1];
+                l2 = local_clauses[pos_cls[new_var_idx][x]][2];
+              }else if (local_clauses[pos_cls[new_var_idx][x]][1] == new_var_idx){
+                l1 = local_clauses[pos_cls[new_var_idx][x]][0];
+                l2 = local_clauses[pos_cls[new_var_idx][x]][2];
+              }else{
+                l1 = local_clauses[pos_cls[new_var_idx][x]][0];
+                l2 = local_clauses[pos_cls[new_var_idx][x]][1];
+              }
+              int l_ded[2]; 
+              deduction(l1, l2, var_truth_table, conflict[x], l_ded);
+            }
           }
         }
 
@@ -240,6 +264,6 @@ void solver_kernel(
     //propogate
   }
 
-  result[0] = satisfiable; 
+  //result[0] = satisfiable; 
 
 }
