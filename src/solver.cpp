@@ -22,6 +22,7 @@
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
   const int var, const int x){
    if (var> 0){
+      assert(pos_cls[var][4]>0);
       if (pos_cls[var][0] == 0){
         pos_cls[var][0] = x; 
       }else if (pos_cls[var][1] == 0){
@@ -30,10 +31,11 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
         pos_cls[var][2] = x; 
       }else if (pos_cls[var][3] == 0){
         pos_cls[var][3] = x; 
-      }else if (pos_cls[var][4] == 0){
+      }else {
         pos_cls[var][4] = x; 
       }
     }else{
+      assert(neg_cls[var][4]>0);
       if (neg_cls[-var][0] == 0){
         neg_cls[-var][0] = x; 
       }else if (neg_cls[-var][1] == 0){
@@ -42,7 +44,7 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
         neg_cls[-var][2] = x; 
       }else if (neg_cls[-var][3] == 0){
         neg_cls[-var][3] = x; 
-      }else if (neg_cls[-var][4] == 0){
+      }else { 
         neg_cls[-var][4] = x; 
       }
     }
@@ -117,7 +119,7 @@ void solver_kernel(
 */
 #pragma ACCEL interface variable=result depth=1 
  
-  int satisfiable ; 
+  int satisfiable; 
   int local_clauses[NUM_CLAUSES][3];
   int pos_cls[NUM_VARS][BUF_SIZE];
   int neg_cls[NUM_VARS][BUF_SIZE];
@@ -145,14 +147,15 @@ void solver_kernel(
 
     switch(state){
       case DECISION:
+        if (new_var_idx == NUM_VARS)
+          state = SOLVED;
+
         while (var_truth_table[new_var_idx] != 0){
           new_var_idx ++; 
         }
-        if (new_var_idx == NUM_VARS)
-          state = SOLVED;
         
         if (pos_cls[new_var_idx][3] == Undef){
-          var_truth_table[new_var_idx] = 1; //assigned to True
+          var_truth_table[new_var_idx] = T; //assigned to True
         }
         stack_end_ptr ++; 
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
@@ -190,6 +193,7 @@ void solver_kernel(
           state = BACKTRACK;
         }else{      
           state = DECISION;   
+          new_var_idx ++; 
         }
 
       case ANAYLSIS: 
