@@ -106,9 +106,9 @@ void solver_kernel(
   
         if (l1>0 && l2>0){
           conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
-        }else if (l1>0 && L2<0){
+        }else if (l1>0 && l2<0){
           conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
-        }else if (l1<0 && L2>0){
+        }else if (l1<0 && l2>0){
           conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
         }else{
           conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
