@@ -1,11 +1,14 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <cmath> 
+#include <vector> 
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
-//using std::vector;
-void collect_buffer(int pos_cls[NUM_VARS][5], int neg_cls[NUM_VARS][5], int var, int x){
+#define BUF_SIZE 5
+using std::vector;
+void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], int var, int x){
    if (var> 0){
       if (pos_cls[var][0] == 0){
         pos_cls[var][0] = x; 
@@ -33,6 +36,21 @@ void collect_buffer(int pos_cls[NUM_VARS][5], int neg_cls[NUM_VARS][5], int var,
     }
 }
 
+/*
+void deduction(){
+
+  if (l1>0 && l2>0){
+    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
+  }else if (l1>0 && l2<0){
+    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
+  }else if (l1<0 && l2>0){
+    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
+  }else{
+    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
+  }
+
+}*/
+
 
 #pragma ACCEL kernel
 void solver_kernel(
@@ -53,8 +71,8 @@ void solver_kernel(
  
  
   int local_clauses[NUM_CLAUSES][3];
-  int pos_cls[NUM_VARS][5];
-  int neg_cls[NUM_VARS][5];
+  int pos_cls[NUM_VARS][BUF_SIZE];
+  int neg_cls[NUM_VARS][BUF_SIZE];
   
  // vector<int> local_pos_lit_cls[NUM_VAR];
 
@@ -85,10 +103,10 @@ void solver_kernel(
     var_truth_table[new_var_idx] = 1; //assigned to truth
 
     //propogate
-    bool conflict[5];
+    bool conflict[BUF_SIZE];
 
     #pragma ACCEL parallel 
-    for (int x = 0; x < 5; x++){
+    for (int x = 0; x < BUF_SIZE; x++){
       int l1, l2;
       if (neg_cls[new_var_idx][x] == 0){
         conflict[x] = 0; 
@@ -103,28 +121,29 @@ void solver_kernel(
           l1 = local_clauses[neg_cls[new_var_idx][x]][0];
           l2 = local_clauses[neg_cls[new_var_idx][x]][1];
         }
-  
+
         if (l1>0 && l2>0){
-          conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
-        }else if (l1>0 && l2<0){
-          conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
-        }else if (l1<0 && l2>0){
-          conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
-        }else{
-          conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
-        }
+    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[l2] == 1);
+  }else if (l1>0 && l2<0){
+    conflict[x] = (var_truth_table[l1] == 2) && (var_truth_table[-l2] == 2);
+  }else if (l1<0 && l2>0){
+    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[l2] != 1);
+  }else{
+    conflict[x] = (var_truth_table[-l1] != 1) && (var_truth_table[-l2] != 1);
+  }
+  
       }
     }
 
-    new_var_idx ++; 
 
-/*
     if (conflict[0] | conflict[1] | conflict[2] | conflict[3] | conflict[4]){
-
+      //Found conflict, go back to decision
+    }else{      
+      
     }
-*/
+    new_var_idx ++; 
   }
 
-  result[0] = 3; 
+  result[0] = new_var_idx; 
 
 }
