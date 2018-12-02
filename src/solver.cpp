@@ -2,7 +2,6 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <ostream.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
@@ -19,7 +18,6 @@
 #define BACKTRACK 4 
 #define FAILED 5
 
-//using std::cout;
 
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
   const int var, const int x){
@@ -51,7 +49,6 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
       }
     }
 }
-
 
 
 void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
@@ -155,8 +152,6 @@ void solver_kernel(
     collect_buffer(pos_cls, neg_cls, c1[x], x);
     collect_buffer(pos_cls, neg_cls, c2[x], x);
     collect_buffer(pos_cls, neg_cls, c3[x], x);
-    
-
   }
 
   int new_var_idx = 0; 
@@ -177,7 +172,7 @@ void solver_kernel(
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
 
         state = PROP;
-        //result[0] = new_var_idx;
+        printf("Decide var : v" + new_var_idx +"\n");
 
       case PROP:
         bool conflict[BUF_SIZE];
@@ -264,6 +259,6 @@ void solver_kernel(
     //propogate
   }
 
-  //result[0] = satisfiable; 
+  result[0] = satisfiable; 
 
 }
