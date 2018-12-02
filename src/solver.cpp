@@ -11,6 +11,13 @@
 #define T 1
 #define Undef 0
 
+#define SOLVED 0
+#define DECISION 1
+#define PROP 2
+#define ANAYLSIS 3
+#define BACKTRACK 4 
+#define FAILED 5
+
 //using std::vector;
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
   const int var, const int x){
@@ -114,15 +121,13 @@ void solver_kernel(
   int local_clauses[NUM_CLAUSES][3];
   int pos_cls[NUM_VARS][BUF_SIZE];
   int neg_cls[NUM_VARS][BUF_SIZE];
-
-  int *test = (int *)malloc(sizeof(int) * 10);
   
  // vector<int> local_pos_lit_cls[NUM_VAR];
-
-
-  //int cl_truth_table[NUM_CLAUSES][3];
-  int num_T_cls = 0;  
-  //int assigned_var_buf[NUM_VARS][2]; // idx, assigned value 
+  int state = 0; 
+ 
+  int assigned_vars_stack[NUM_VARS]; // assigend value stack
+  bool assigned_TF[NUM_VARS]; //1: if we assigned both True and False to variables 
+  int stack_end_ptr = 0; 
   int var_truth_table[NUM_VARS];
 
   //#pragma ACCEL pipeline 
@@ -136,56 +141,78 @@ void solver_kernel(
   }
 
   int new_var_idx = 0; 
-  while (num_T_cls == NUM_CLAUSES){
-    num_T_cls ++; 
+  int passed = 0; 
+  while (state == SOLVED | state = FAILED){
 
-    //Step 1: decide
-    while (var_truth_table[new_var_idx] != 0){
-      new_var_idx ++; 
-    }
-    var_truth_table[new_var_idx] = 1; //assigned to truth
+    switch(~(state == FAILED | state == SOLVED)){
+      case DECISION:
+        while (var_truth_table[new_var_idx] != 0){
+          new_var_idx ++; 
+        }
+        var_truth_table[new_var_idx] = 1; //assigned to True
+        assigned_vars_stack[stack_end_ptr ++] = new_var_idx;
+        state = PROP;
+      case PROP:
+        bool conflict[BUF_SIZE];
+        //int ded_var_idx[BUF_SIZE];
+        //int ded_var_value[BUF_SIZE]; 
+
+        #pragma ACCEL parallel 
+        for (int x = 0; x < BUF_SIZE; x++){
+          int l1, l2;
+          if (neg_cls[new_var_idx][x] == 0){
+            conflict[x] = 0; 
+          }else{
+            if (local_clauses[neg_cls[new_var_idx][x]][0] == new_var_idx){
+              l1 = local_clauses[neg_cls[new_var_idx][x]][1];
+              l2 = local_clauses[neg_cls[new_var_idx][x]][2];
+            }else if (local_clauses[neg_cls[new_var_idx][x]][1] == new_var_idx){
+              l1 = local_clauses[neg_cls[new_var_idx][x]][0];
+              l2 = local_clauses[neg_cls[new_var_idx][x]][2];
+            }else{
+              l1 = local_clauses[neg_cls[new_var_idx][x]][0];
+              l2 = local_clauses[neg_cls[new_var_idx][x]][1];
+            }
+            int l_ded[2]; 
+            deduction(l1, l2, var_truth_table, conflict[x], l_ded);
+          }
+        }
+
+        if (conflict[0] | conflict[1] | conflict[2] | conflict[3] | conflict[4]){
+          //Found conflict, go back decision
+          state = BACKTRACK;
+        }else{      
+          state = DECISION;   
+        }
+
+      case ANAYLSIS: 
+
+      case BACKTRACK:
+        while(assigned_vars[new_var_idx] == 1){
+          //We checked both True and False cases, we need to go back 
+          var_truth_table[new_var_idx] = Undef; 
+          assigned_vars_stack[stack_end_ptr --] = 0; //pop current variables
+          if (stack_end_ptr < 0){
+            break; 
+            state = FAILED; 
+          }
+          new_var_idx = assigned_vars_stack[stack_end_ptr]; 
+        }
+
+        if (var_truth_table[new_var_idx] == T){
+          var_truth_table[new_var_idx] = F;
+        }else{
+          var_truth_table[new_var_idx] = T;
+        }
+        state = PROP; 
+
+      case SOLVED:
+
+      case FAILED: 
+        result = 0; 
+    }  
 
     //propogate
-    bool conflict[BUF_SIZE];
-    int ded_num[BUF_SIZE][2]; // idx and its value
-
-    #pragma ACCEL parallel 
-    for (int x = 0; x < BUF_SIZE; x++){
-      int l1, l2;
-      if (neg_cls[new_var_idx][x] == 0){
-        conflict[x] = 0; 
-      }else{
-        if (local_clauses[neg_cls[new_var_idx][x]][0] == new_var_idx){
-          l1 = local_clauses[neg_cls[new_var_idx][x]][1];
-          l2 = local_clauses[neg_cls[new_var_idx][x]][2];
-        }else if (local_clauses[neg_cls[new_var_idx][x]][1] == new_var_idx){
-          l1 = local_clauses[neg_cls[new_var_idx][x]][0];
-          l2 = local_clauses[neg_cls[new_var_idx][x]][2];
-        }else{
-          l1 = local_clauses[neg_cls[new_var_idx][x]][0];
-          l2 = local_clauses[neg_cls[new_var_idx][x]][1];
-        }
-        int l_ded[2]; 
-        deduction(l1, l2, var_truth_table, conflict, l_ded);
-        if (l_ded[0]!= Undef){
-          ded_num[x][0]=l1;
-          ded_num[x][1]=l_ded[0]; 
-        }else if (l_ded[1] != Undef){
-          ded_num[x][0]=l2;
-          ded_num[x][1]=l_ded[1];
-        }
-      }
-
-    }
-
-
-
-    if (conflict[0] | conflict[1] | conflict[2] | conflict[3] | conflict[4]){
-      //Found conflict, go back to decision
-    }else{      
-      
-    }
-    new_var_idx ++; 
   }
 
   result[0] = new_var_idx; 

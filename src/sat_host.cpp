@@ -48,12 +48,8 @@ int main(int argc, char **argv) {
   // Prepare data
   for (int i = 0; i < NUM_TEST; ++i)
     read_clause_file("./data/uf250-01.cnf", c1, c2, c3);
-
   cout << "Clause :"<< c1[0] << " " << c2[0]<< " " <<c3[0] << endl; 
-  // Compute
-  for (int i = 0; i < NUM_TEST; ++i) {
-    read_clause_file("./data/uf250-01.cnf", c1, c2, c3); 
-    //  pos_cls, neg_cls, pos_cls_idx, neg_cls_idx);
+
 #ifdef MCC_ACC
     __merlin_solver_kernel(c1, c2, c3, result); 
      // pos_cls, neg_cls, pos_cls_idx, neg_cls_idx);); 
