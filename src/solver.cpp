@@ -5,7 +5,7 @@
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
 //using std::vector;
-void collect_buffer(int pos_cls[NUM_VARS][5], int neg_cls[NUM_VARS][5], int var){
+void collect_buffer(int pos_cls[NUM_VARS][5], int neg_cls[NUM_VARS][5], int var, int x){
    if (var> 0){
       if (pos_cls[var][0] == 0){
         pos_cls[var][0] = x; 
@@ -69,12 +69,12 @@ void solver_kernel(
     local_clauses[x][0] = c1[x];
     local_clauses[x][1] = c2[x];
     local_clauses[x][2] = c3[x];
-    collect_buffer(pos_cls, neg_cls, c1[x]);
-    collect_buffer(pos_cls, neg_cls, c2[x]);
-    collect_buffer(pos_cls, neg_cls, c3[x]);
+    collect_buffer(pos_cls, neg_cls, c1[x], x);
+    collect_buffer(pos_cls, neg_cls, c2[x], x);
+    collect_buffer(pos_cls, neg_cls, c3[x], x);
   }
 
-  new_var_idx = 0; 
+  int new_var_idx = 0; 
   while (num_T_cls == NUM_CLAUSES){
     num_T_cls ++; 
 
