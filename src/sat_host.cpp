@@ -17,9 +17,9 @@ void digitrec_kernel(int* c1, int* c2, int* c3, int* result);
 #endif
 
 // Util functions for host
-void read_clause_file(string filename, int *c1, int *c2, int *c3, 
-    int *pos_cls, int *neg_cls, 
-    int *pos_cls_idx, int *neg_cls_idx);
+void read_clause_file(string filename, int *c1, int *c2, int *c3); 
+   // int *pos_cls, int *neg_cls, 
+   // int *pos_cls_idx, int *neg_cls_idx);
 
 
 int main(int argc, char **argv) {
