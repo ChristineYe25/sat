@@ -126,7 +126,7 @@ void solver_kernel(
   int state = 0; 
  
   int assigned_vars_stack[NUM_VARS]; // assigend value stack
-  bool assigned_TF[NUM_VARS]; //1: if we assigned both True and False to variables 
+  bool assigned_status[NUM_VARS]; //1: if we assigned both True and False to variables 
   int stack_end_ptr = 0; 
   int var_truth_table[NUM_VARS];
 
@@ -142,9 +142,9 @@ void solver_kernel(
 
   int new_var_idx = 0; 
   int passed = 0; 
-  while (state == SOLVED | state = FAILED){
+  while (~(state == SOLVED | state == FAILED)){
 
-    switch(~(state == FAILED | state == SOLVED)){
+    switch(state){
       case DECISION:
         while (var_truth_table[new_var_idx] != 0){
           new_var_idx ++; 
@@ -188,7 +188,7 @@ void solver_kernel(
       case ANAYLSIS: 
 
       case BACKTRACK:
-        while(assigned_vars[new_var_idx] == 1){
+        while(assigned_status[stack_end_ptr] == 1){
           //We checked both True and False cases, we need to go back 
           var_truth_table[new_var_idx] = Undef; 
           assigned_vars_stack[stack_end_ptr --] = 0; //pop current variables
