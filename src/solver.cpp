@@ -127,7 +127,7 @@ void solver_kernel(
  
   int assigned_vars_stack[NUM_VARS]; // assigend value stack
   bool assigned_status[NUM_VARS]; //1: if we assigned both True and False to variables 
-  int stack_end_ptr = 0; 
+  int stack_end_ptr = -1; 
   int var_truth_table[NUM_VARS];
 
   //#pragma ACCEL pipeline 
@@ -148,9 +148,17 @@ void solver_kernel(
         while (var_truth_table[new_var_idx] != 0){
           new_var_idx ++; 
         }
-        var_truth_table[new_var_idx] = 1; //assigned to True
-        assigned_vars_stack[stack_end_ptr ++] = new_var_idx;
+        if (new_var_idx == NUM_VARS)
+          state = SOLVED;
+        
+        if (pos_cls[new_var_idx][3] == Undef){
+          var_truth_table[new_var_idx] = 1; //assigned to True
+        }
+        stack_end_ptr ++; 
+        assigned_vars_stack[stack_end_ptr] = new_var_idx;
+
         state = PROP;
+
       case PROP:
         bool conflict[BUF_SIZE];
         //int ded_var_idx[BUF_SIZE];
@@ -190,7 +198,8 @@ void solver_kernel(
         while(assigned_status[stack_end_ptr] == 1){
           //We checked both True and False cases, we need to go back 
           var_truth_table[new_var_idx] = Undef; 
-          assigned_vars_stack[stack_end_ptr --] = 0; //pop current variables
+          assigned_vars_stack[stack_end_ptr] = 0; //pop current variables
+          stack_end_ptr --; 
           if (stack_end_ptr < 0){
             break; 
             state = FAILED; 
@@ -203,6 +212,7 @@ void solver_kernel(
         }else{
           var_truth_table[new_var_idx] = T;
         }
+        assigned_status[stack_end_ptr] = 1; 
         state = PROP; 
 
       case SOLVED:
