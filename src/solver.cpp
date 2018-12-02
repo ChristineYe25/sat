@@ -184,7 +184,7 @@ void solver_kernel(
 
         state = PROP;
         printf("Decide var : v");
-
+        break; 
       case PROP:
         bool conflict[BUF_SIZE];
         //int ded_var_idx[BUF_SIZE];
@@ -237,9 +237,9 @@ void solver_kernel(
           state = DECISION;   
           new_var_idx ++; 
         }
-
+        break;
       case ANAYLSIS: 
-
+        break;
       case BACKTRACK:
         while(assigned_status[stack_end_ptr] == 1){
           //We checked both True and False cases, we need to go back 
@@ -260,15 +260,17 @@ void solver_kernel(
         }
         assigned_status[stack_end_ptr] = 1; 
         state = PROP; 
-
+        break;
       case SOLVED:
         satisfiable = 1;
         state = EXIT; 
         printf("Finish kernel - Solved\n");
+        break;
       case FAILED: 
         satisfiable = 0; 
         state = EXIT; 
         printf("Finish kernel - Failed\n");
+        break;
     }  
 
     //propogate
