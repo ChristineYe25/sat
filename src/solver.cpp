@@ -2,12 +2,14 @@
 #include <math.h>
 #include <assert.h>
 #include <cmath> 
-#include <vector> 
+
+#include <stdio.h>
+#include <stdlib.h>
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
 #define BUF_SIZE 5
-using std::vector;
+//using std::vector;
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], int var, int x){
    if (var> 0){
       if (pos_cls[var][0] == 0){
