@@ -129,8 +129,8 @@ void solver_kernel(
  
   int satisfiable; 
   int local_clauses[NUM_CLAUSES][3];
-  int pos_cls[NUM_VARS][BUF_SIZE];
-  int neg_cls[NUM_VARS][BUF_SIZE];
+  int pos_cls[NUM_VARS][BUF_SIZE] = {0};
+  int neg_cls[NUM_VARS][BUF_SIZE] = {0};
   //int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
   //int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
 
@@ -159,6 +159,7 @@ void solver_kernel(
     collect_buffer(pos_cls, neg_cls, c3[x], x);
   }
 
+  printf("Finish reading dsata \n");
   int new_var_idx = 0; 
   while (~(state == SOLVED | state == FAILED)){
 
