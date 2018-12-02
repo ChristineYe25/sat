@@ -4,12 +4,39 @@
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
-using std::vector;
+//using std::vector;
+void collect_buffer(int pos_cls[NUM_VARS][5], int neg_cls[NUM_VARS][5], int var){
+   if (var> 0){
+      if (pos_cls[var][0] == 0){
+        pos_cls[var][0] = x; 
+      }else if (pos_cls[var][1] == 0){
+        pos_cls[var][1] = x; 
+      }else if (pos_cls[var][2] == 0){
+        pos_cls[var][2] = x; 
+      }else if (pos_cls[var][3] == 0){
+        pos_cls[var][3] = x; 
+      }else if (pos_cls[var][4] == 0){
+        pos_cls[var][4] = x; 
+      }
+    }else{
+      if (neg_cls[-var][0] == 0){
+        neg_cls[-var][0] = x; 
+      }else if (neg_cls[-var][1] == 0){
+        neg_cls[-var][1] = x; 
+      }else if (neg_cls[-var][2] == 0){
+        neg_cls[-var][2] = x; 
+      }else if (neg_cls[-var][3] == 0){
+        neg_cls[-var][3] = x; 
+      }else if (neg_cls[-var][4] == 0){
+        neg_cls[-var][4] = x; 
+      }
+    }
+}
+
 
 #pragma ACCEL kernel
 void solver_kernel(
         int* c1, int* c2, int* c3, 
-        int* pos_lit, int* neg_lit, 
         int* result){
    //     int* pos_cls, int* neg_cls, int* pos_cls_idx, int* neg_cls_idx) {
 
@@ -29,7 +56,7 @@ void solver_kernel(
   int pos_cls[NUM_VARS][5];
   int neg_cls[NUM_VARS][5];
   
-  vector<int> local_pos_lit_cls[NUM_VAR];
+ // vector<int> local_pos_lit_cls[NUM_VAR];
 
 
   //int cl_truth_table[NUM_CLAUSES][3];
@@ -42,31 +69,9 @@ void solver_kernel(
     local_clauses[x][0] = c1[x];
     local_clauses[x][1] = c2[x];
     local_clauses[x][2] = c3[x];
-    if (c1[x] > 0){
-      if (pos_cls[c1[x]][0] == 0){
-        pos_cls[c1[x][0]] = x; 
-      }else if (pos_cls[c1[x]][0] == 0){
-        pos_cls[c1[x][0]] = x; 
-      }else if (pos_cls[c1[x]][0] == 0){
-        pos_cls[c1[x][0]] = x; 
-      }else if (pos_cls[c1[x]][0] == 0){
-        pos_cls[c1[x][0]] = x; 
-      }else if (pos_cls[c1[x]][0] == 0){
-        pos_cls[c1[x][0]] = x; 
-      }
-    }else{
-      if (neg_cls[-c1[x]][0] == 0){
-        neg_cls[-c1[x][0]] = x; 
-      }else if (neg_cls[-c1[x]][0] == 0){
-        neg_cls[-c1[x][0]] = x; 
-      }else if (neg_cls[-c1[x]][0] == 0){
-        neg_cls[-c1[x][0]] = x; 
-      }else if (neg_cls[-c1[x]][0] == 0){
-        poneg_clss_cls[-c1[x][0]] = x; 
-      }else if (neg_cls[-c1[x]][0] == 0){
-        neg_cls[-c1[x][0]] = x; 
-      }
-    }
+    collect_buffer(pos_cls, neg_cls, c1[x]);
+    collect_buffer(pos_cls, neg_cls, c2[x]);
+    collect_buffer(pos_cls, neg_cls, c3[x]);
   }
 
   new_var_idx = 0; 
