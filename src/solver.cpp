@@ -27,16 +27,20 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
    if (var> 0){
       //assert(pos_cls[var][4]>0);
       if (pos_cls[var][0] == 0){
-        pos_cls[var][0] = x; 
+        pos_cls[var][0] = x;
+        printf("Get here 1"); 
       }else if (pos_cls[var][1] == 0){
-        pos_cls[var][1] = x; 
+        pos_cls[var][1] = x;
+        printf("Get here 2"); 
       }else if (pos_cls[var][2] == 0){
-        pos_cls[var][2] = x; 
+        pos_cls[var][2] = x;
+        printf("Get here 3"); 
       }else if (pos_cls[var][3] == 0){
         pos_cls[var][3] = x; 
+        printf("Get here 4");
       }else {
         pos_cls[var][4] = x; 
-        printf("Get here "); 
+        printf("Get here 5"); 
       }
     }else{
       //assert(neg_cls[var][4]>0);
@@ -50,7 +54,6 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
         neg_cls[-var][3] = x; 
       }else { 
         neg_cls[-var][4] = x; 
-        printf("Get here 2"); 
       }
     }
 }
@@ -134,7 +137,7 @@ void solver_kernel(
   //int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
   //int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
 
-  int state = 0; 
+  int state = SOLVED; 
  
   int assigned_vars_stack[NUM_VARS]; // assigend value stack
   bool assigned_status[NUM_VARS]; //1: if we assigned both True and False to variables 
@@ -161,6 +164,7 @@ void solver_kernel(
 
   printf("Finish reading dsata \n");
   int new_var_idx = 0; 
+
   while (~(state == SOLVED | state == FAILED)){
 
     switch(state){
@@ -258,8 +262,10 @@ void solver_kernel(
 
       case SOLVED:
         satisfiable = 1; 
+        printf("Finish kernel - Solved\n", );
       case FAILED: 
         satisfiable = 0; 
+        printf("Finish kernel - Failed\n", );
     }  
 
     //propogate
