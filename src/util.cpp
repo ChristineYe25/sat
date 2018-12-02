@@ -55,21 +55,6 @@ void read_clause_file(string filename, int *c1, int *c2, int *c3){
       c1[cnt] = l1;
       c2[cnt] = l2;
       c3[cnt] = l3;
-      if (l1 > 0){
-        pos[l1].push(cnt);
-      }else{
-        local_neg_lit_cls[-l1].push(cnt);
-      }
-      if (l2 > 0){
-        local_pos_lit_cls[l2].push(cnt);
-      }else{
-        local_neg_lit_cls[-l2].push(cnt);
-      }
-      if (l3 > 0){
-        local_pos_lit_cls[l3].push(cnt);
-      }else{
-        local_neg_lit_cls[-l3].push(cnt);
-      }
       /*
       if (l1 > 0){
         local_pos_lit_cls[l1].push(cnt);
