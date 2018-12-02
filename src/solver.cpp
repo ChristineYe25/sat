@@ -124,7 +124,7 @@ void solver_kernel(
   int stack_end_ptr = -1; 
   int var_truth_table[NUM_VARS];
 
-  for (i=0; i<NUM_VARS; i++){
+  for (int i=0; i<NUM_VARS; i++){
     pos_cls[i] = (int *)malloc(num_pos_cls[i] * sizeof(int));
     neg_cls[i] = (int *)malloc(num_neg_cls[i] * sizeof(int));
   }
