@@ -29,19 +29,19 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
       //assert(pos_cls[var][4]>0);
       if (pos_cls[var][0] == 0){
         pos_cls[var][0] = x;
-        printf("Get here 1"); 
+        //printf("Get here 1"); 
       }else if (pos_cls[var][1] == 0){
         pos_cls[var][1] = x;
-        printf("Get here 2"); 
+        //printf("Get here 2"); 
       }else if (pos_cls[var][2] == 0){
         pos_cls[var][2] = x;
-        printf("Get here 3"); 
+        //printf("Get here 3"); 
       }else if (pos_cls[var][3] == 0){
         pos_cls[var][3] = x; 
-        printf("Get here 4");
+        //printf("Get here 4");
       }else {
         pos_cls[var][4] = x; 
-        printf("Get here 5"); 
+        //printf("Get here 5"); 
       }
     }else{
       //assert(neg_cls[var][4]>0);
@@ -138,7 +138,7 @@ void solver_kernel(
   //int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
   //int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
 
-  int state = SOLVED; 
+  int state = DECISION; 
  
   int assigned_vars_stack[NUM_VARS]; // assigend value stack
   bool assigned_status[NUM_VARS]; //1: if we assigned both True and False to variables 
@@ -183,7 +183,7 @@ void solver_kernel(
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
 
         state = PROP;
-        printf("Decide var : v");
+        printf("Decide var : v " + );
         break; 
       case PROP:
         bool conflict[BUF_SIZE];
