@@ -4,6 +4,7 @@
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
+using std::vector;
 
 #pragma ACCEL kernel
 void solver_kernel(
@@ -27,6 +28,9 @@ void solver_kernel(
   int local_clauses[NUM_CLAUSES][3];
   int pos_cls[NUM_VARS][5];
   int neg_cls[NUM_VARS][5];
+  
+  vector<int> local_pos_lit_cls[NUM_VAR];
+
 
   //int cl_truth_table[NUM_CLAUSES][3];
   int num_T_cls = 0;  
