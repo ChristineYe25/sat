@@ -173,7 +173,7 @@ void solver_kernel(
         assigned_vars_stack[stack_end_ptr] = new_var_idx;
 
         state = PROP;
-        printf("Decide var : v" +"\n");
+        printf("Decide var : v");
 
       case PROP:
         bool conflict[BUF_SIZE];
