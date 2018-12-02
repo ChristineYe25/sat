@@ -42,7 +42,6 @@ void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_S
 
 
 void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
-  conflict = 0; 
   if (l1>0 && l2>0){
     // F & F or F -> T or T <- F
     if (var_truth_table[l1] == F){
@@ -50,6 +49,7 @@ void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
         conflict = 1;
       }else {
         l_ded[1] = T;
+        conflict = 0;
       }
     }else if (var_truth_table[l1] == Undef && var_truth_table[l2] == F ){
       l_ded[0] = T;
@@ -167,11 +167,11 @@ void solver_kernel(
         int l_ded[2]; 
         deduction(l1, l2, var_truth_table, conflict, l_ded);
         if (l_ded[0]!= Undef){
-          ded_num[x]=l1;
-          ded_num[x]=l_ded[0]; 
+          ded_num[x][0]=l1;
+          ded_num[x][1]=l_ded[0]; 
         }else if (l_ded[1] != Undef){
-          ded_num[x]=l2;
-          ded_num[x]=l_ded[1];
+          ded_num[x][0]=l2;
+          ded_num[x][1]=l_ded[1];
         }
       }
 
