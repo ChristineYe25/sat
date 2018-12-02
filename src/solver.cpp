@@ -44,6 +44,16 @@ void solver_kernel(
     }else{
       pos_cls_idx[c1[x]].push(x);
     }
+    if (c2[x] < 0){
+      neg_cls_idx[c2[x]].push(x);
+    }else{
+      pos_cls_idx[c2[x]].push(x);
+    }
+    if (c3[x] < 0){
+      neg_cls_idx[c3[x]].push(x);
+    }else{
+      pos_cls_idx[c3[x]].push(x);
+    }
   }
 
   for (int x = 0; x < NUM_VAR; x++){
