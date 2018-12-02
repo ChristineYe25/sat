@@ -104,15 +104,15 @@ void deduction(int l1, int l2, int *var_truth_table, bool conflict, int *l_ded){
 
 #pragma ACCEL kernel
 void solver_kernel(
-        int* c1, int* c2, int* c3, int* num_pos_cls, int* num_neg_cls, 
+        int* c1, int* c2, int* c3, //int* num_pos_cls, int* num_neg_cls, 
         int* result){
    //     int* pos_cls, int* neg_cls, int* pos_cls_idx, int* neg_cls_idx) {
 
 #pragma ACCEL interface variable=c1 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=c2 bus_bitwidth=512 depth = 1065
 #pragma ACCEL interface variable=c3 bus_bitwidth=512 depth = 1065
-#pragma ACCEL interface variable=num_pos_cls bus_bitwidth=512 depth = 1065
-#pragma ACCEL interface variable=num_neg_cls bus_bitwidth=512 depth = 1065  
+//#pragma ACCEL interface variable=num_pos_cls bus_bitwidth=512 depth = 1065
+//#pragma ACCEL interface variable=num_neg_cls bus_bitwidth=512 depth = 1065  
 
   /*
 #pragma ACCEL interface variable=pos_cls bus_bitwidth=512 depth = 1065
@@ -124,10 +124,10 @@ void solver_kernel(
  
   int satisfiable; 
   int local_clauses[NUM_CLAUSES][3];
-  //int pos_cls[NUM_VARS][BUF_SIZE];
-  //int neg_cls[NUM_VARS][BUF_SIZE];
-  int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
-  int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
+  int pos_cls[NUM_VARS][BUF_SIZE];
+  int neg_cls[NUM_VARS][BUF_SIZE];
+  //int **pos_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
+  //int **neg_cls = (int **)malloc(NUM_VARS * sizeof(int *)); 
 
   int state = 0; 
  
