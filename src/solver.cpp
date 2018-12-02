@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 //#include <string> 
+using namespace std; 
 
 #define NUM_CLAUSES 1065
 #define NUM_VARS 250 
