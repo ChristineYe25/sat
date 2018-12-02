@@ -2,6 +2,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 //#include <string> 
 
 #define NUM_CLAUSES 1065
