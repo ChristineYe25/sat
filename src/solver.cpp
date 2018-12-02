@@ -20,6 +20,7 @@ using namespace std;
 #define ANAYLSIS 3
 #define BACKTRACK 4 
 #define FAILED 5
+#define EXIT 6
 
 
 void collect_buffer(int pos_cls[NUM_VARS][BUF_SIZE], int neg_cls[NUM_VARS][BUF_SIZE], 
@@ -165,7 +166,7 @@ void solver_kernel(
   printf("Finish reading dsata \n");
   int new_var_idx = 0; 
 
-  while (~(state == SOLVED | state == FAILED)){
+  while (state != EXIT){
 
     switch(state){
       case DECISION:
@@ -261,10 +262,12 @@ void solver_kernel(
         state = PROP; 
 
       case SOLVED:
-        satisfiable = 1; 
+        satisfiable = 1;
+        state = EXIT; 
         printf("Finish kernel - Solved\n");
       case FAILED: 
         satisfiable = 0; 
+        state = EXIT; 
         printf("Finish kernel - Failed\n");
     }  
 
