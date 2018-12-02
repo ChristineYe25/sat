@@ -262,10 +262,10 @@ void solver_kernel(
 
       case SOLVED:
         satisfiable = 1; 
-        printf("Finish kernel - Solved\n", );
+        printf("Finish kernel - Solved\n");
       case FAILED: 
         satisfiable = 0; 
-        printf("Finish kernel - Failed\n", );
+        printf("Finish kernel - Failed\n");
     }  
 
     //propogate
