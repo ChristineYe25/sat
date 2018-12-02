@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
   int *c3 = (int *)malloc(sizeof(int) * NUM_CLAUSES);
   int *pos_cls = (int *)malloc(sizeof(int) * NUM_CLAUSES); 
   int *neg_cls = (int *)malloc(sizeof(int) * NUM_CLAUSES); 
-  int *pos_cls_idx = (int *)malloc(sizeof(int) * NUM_VAR); 
-  int *neg_cls_idx = (int *)malloc(sizeof(int) * NUM_VAR); 
+  //int *pos_cls_idx = (int *)malloc(sizeof(int) * NUM_VAR); 
+  //int *neg_cls_idx = (int *)malloc(sizeof(int) * NUM_VAR); 
  
   int *result = (int *)malloc(sizeof(int));
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 #endif
 
     cout << "Result : " << result[0] << endl; 
-  }
+  
 
 #ifdef MCC_ACC
     __merlin_release();
